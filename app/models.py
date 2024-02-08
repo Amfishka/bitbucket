@@ -1,11 +1,32 @@
-from app import db
+from app import db, login
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
-class User(db.Model):
-    __tablename__ = "user"
+class Role_user(db.Model):
+    # admin, user
+    __tablename__ = "role_user"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False, unique=True)
+
+
+    def __repr__(self):
+        return f"{self.name}"
+
+class User(db.Model, UserMixin):
+    __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
-    password = db.Column(db.String(100))
-    #role = db.Column(db.String(50), default="user")
+    password = db.Column(db.String(255), nullable=False)
+    role = db.Column(db.String(50), db.ForeignKey(Role_user.name), default="user")
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+    
+    def set_admin(self):
+        self.role = "admin"
 
     def __repr__(self):
         return f"{self.name}"
@@ -51,4 +72,6 @@ class Request_payment(db.Model):
             'status': self.status,
         }
 
-    
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))

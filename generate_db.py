@@ -1,9 +1,14 @@
 from app import db, app
-from app.models import Request_payment, Requisites
+from app.models import Request_payment, Requisites, Role_user, User
 import json
 
-# Таблица 1
+'''
+Для того, чтобы добавить данные в базу данных запустите данный файл.
+
+'''
+
 def table_Requisites_add_data():
+    '''Заполнение таблицы с реквизитами'''
     with open("app/tmp/table_Requisites.json", "r") as f:
         data = json.load(f)
     with app.app_context():
@@ -18,6 +23,7 @@ def table_Requisites_add_data():
 
 
 def table_Request_payment_add_data():
+    '''Заполнение таблицы с заявками на оплату'''
     with open("app/tmp/table_Request_payment.json", "r") as f:
         data = json.load(f)
     with app.app_context(): 
@@ -28,7 +34,33 @@ def table_Request_payment_add_data():
             db.session.add(r)
         db.session.commit()
 
+def table_User_role():
+    '''Заполнение таблицы ролей'''
+    with app.app_context():
+        role_admin = Role_user(name="admin")
+        role_user = Role_user(name="user")
+        db.session.add(role_admin)
+        db.session.add(role_user)
+        db.session.commit()
+
+def table_User():
+    '''Заполнение таблицы пользователей'''
+    with app.app_context():
+        # Создание админа
+        u_admin = User(name="admin")
+        u_admin.set_password('password')
+        u_admin.set_admin()
+        db.session.add(u_admin)
+
+        # Создание пользователя
+        u_user = User(name="andry")
+        u_user.set_password('password')
+        db.session.add(u_user)
+
+        db.session.commit()
+
 if __name__ == "__main__":
     table_Requisites_add_data()
     table_Request_payment_add_data()
-
+    table_User_role()
+    table_User()
