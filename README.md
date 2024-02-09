@@ -25,4 +25,4 @@
 
 Часть 1 и Часть 2 выполненены полностью. 
 
-По вопросам обращаться в по номеру телефона **+79194943851** или в Telegram [t.me/NickWolfskin](t.me/NickWolfskin)
+По вопросам обращаться в по номеру телефона **+79194943851** или в Telegram [t.me/NickWolfskin](https://t.me/NickWolfskin)
